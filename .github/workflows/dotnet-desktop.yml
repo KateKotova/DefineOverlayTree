@@ -1,4 +1,4 @@
-name: Build .NET Framework WPF App
+name: Debug Build
 
 on:
   push:
@@ -8,43 +8,39 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        configuration: [Debug, Release]
-        platform: [x86, x64, "Any CPU"]
-    
     runs-on: windows-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
     
-    # Добавляем MSBuild в PATH
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
     
-    # Устанавливаем NuGet
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v2
+    - name: List files (для диагностики)
+      run: dir /s /b
     
-    # Восстанавливаем NuGet пакеты
-    - name: Restore NuGet packages
-      run: nuget restore DefineOverlayTree.sln
+    - name: Find .sln files
+      run: dir *.sln /s /b
     
-    # Сборка проекта
-    - name: Build the application
-      run: msbuild YourSolutionName.sln /p:Configuration=${{ matrix.configuration }} /p:Platform="${{ matrix.platform }}" /p:TargetFrameworkVersion=v4.5
+    - name: Find .csproj files
+      run: dir *.csproj /s /b
     
-    # Поиск и загрузка собранных файлов
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: WPF-App-${{ matrix.configuration }}-${{ matrix.platform }}
-        path: |
-          **/bin/${{ matrix.configuration }}/**/*.exe
-          **/bin/${{ matrix.configuration }}/**/*.dll
-          **/bin/${{ matrix.configuration }}/**/*.config
-          **/bin/${{ matrix.configuration }}/**/*.pdb
-        if-no-files-found: warn
+    - name: Try to build
+      run: |
+        # Попробуем найти первый .sln файл и собрать его
+        $slnFile = Get-ChildItem -Filter *.sln -Recurse | Select-Object -First 1
+        if ($slnFile) {
+          Write-Host "Building $($slnFile.FullName)"
+          msbuild $slnFile.FullName /p:Configuration=Debug /p:Platform="Any CPU"
+        } else {
+          Write-Host "No .sln file found, looking for .csproj"
+          $csprojFile = Get-ChildItem -Filter *.csproj -Recurse | Select-Object -First 1
+          if ($csprojFile) {
+            Write-Host "Building $($csprojFile.FullName)"
+            msbuild $csprojFile.FullName /p:Configuration=Debug /p:Platform="Any CPU"
+          } else {
+            Write-Error "No solution or project file found"
+            exit 1
+          }
+        }
