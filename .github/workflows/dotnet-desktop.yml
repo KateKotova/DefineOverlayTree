@@ -20,32 +20,37 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
     
-    - name: Find solution file
+    # Устанавливаем .NET Framework 4.6.1 Developer Pack
+    - name: Setup .NET Framework 4.6.1
       run: |
-        $slnFile = Get-ChildItem -Filter *.sln -Recurse | Select-Object -First 1
-        if ($slnFile) {
-          Write-Host "Found solution: $($slnFile.FullName)"
-          echo "SOLUTION_FILE=$($slnFile.FullName)" >> $env:GITHUB_ENV
-        } else {
-          Write-Host "No solution file found"
-        }
+        $url = "https://download.microsoft.com/download/E/F/D/EFD7B5F3-C79E-42E1-B78C-7B31904D189A/NDP461-DevPack-KB3105179-ENU.exe"
+        $output = "NDP461-DevPack.exe"
+        
+        Write-Host "Downloading .NET Framework 4.6.1 Developer Pack..."
+        Invoke-WebRequest -Uri $url -OutFile $output
+        
+        Write-Host "Installing .NET Framework 4.6.1 Developer Pack..."
+        Start-Process -FilePath $output -ArgumentList "/quiet", "/norestart" -Wait
+        
+        Write-Host "Installation completed"
     
+    # Восстанавливаем NuGet пакеты
     - name: Restore NuGet packages
       run: |
-        if (Test-Path env:SOLUTION_FILE) {
-          nuget restore $env:SOLUTION_FILE
-        } else {
-          Get-ChildItem -Filter packages.config -Recurse | ForEach-Object {
-            nuget restore $_.FullName -PackagesDirectory packages
-          }
-        }
+        nuget restore "DefineOverlayTree.sln"
     
-    - name: Build with solution
-      if: env.SOLUTION_FILE != ''
-      run: msbuild $env:SOLUTION_FILE /p:Configuration=Release /p:Platform="Any CPU"
-    
-    - name: Build without solution (fallback)
-      if: env.SOLUTION_FILE == ''
+    # Собираем решение
+    - name: Build solution
       run: |
-        $csprojFile = "DefineOverlayTree\DefineOverlayTree.csproj"
-        msbuild $csprojFile /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=bin\Release\
+        msbuild "DefineOverlayTree.sln" /p:Configuration=Release /p:Platform="Any CPU" /p:TargetFrameworkVersion=v4.6.1
+    
+    # Загружаем артефакты сборки
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: WPF-App-Release
+        path: |
+          **/bin/Release/**/*.exe
+          **/bin/Release/**/*.dll
+          **/bin/Release/**/*.config
+        if-no-files-found: warn
