@@ -1,4 +1,4 @@
-name: Build WPF .NET Framework
+name: Build .NET Framework WPF App
 
 on:
   push:
@@ -11,40 +11,40 @@ jobs:
     strategy:
       matrix:
         configuration: [Debug, Release]
+        platform: [x86, x64, "Any CPU"]
     
     runs-on: windows-latest
     
-    env:
-      SOLUTION_PATH: 'DefineOverlayTree.sln'
-      
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
     
-    # Для .NET Framework 4.5 не нужен setup-dotnet, но нужен MSBuild
+    # Добавляем MSBuild в PATH
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
     
-    # Восстановление NuGet пакетов
+    # Устанавливаем NuGet
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+    
+    # Восстанавливаем NuGet пакеты
     - name: Restore NuGet packages
-      run: nuget restore ${{ env.SOLUTION_PATH }}
+      run: nuget restore DefineOverlayTree.sln
     
     # Сборка проекта
     - name: Build the application
-      run: msbuild ${{ env.SOLUTION_PATH }} /p:Configuration=${{ matrix.configuration }} /p:Platform="Any CPU"
+      run: msbuild YourSolutionName.sln /p:Configuration=${{ matrix.configuration }} /p:Platform="${{ matrix.platform }}" /p:TargetFrameworkVersion=v4.5
     
-    # Опционально: запуск тестов (если есть)
-    # - name: Run tests
-    #  run: vstest.console.exe .\YourTestProject\bin\${{ matrix.configuration }}\YourTestProject.dll
-    
-    # Загрузка артефактов сборки
+    # Поиск и загрузка собранных файлов
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: WPF-App-${{ matrix.configuration }}
+        name: WPF-App-${{ matrix.configuration }}-${{ matrix.platform }}
         path: |
           **/bin/${{ matrix.configuration }}/**/*.exe
           **/bin/${{ matrix.configuration }}/**/*.dll
+          **/bin/${{ matrix.configuration }}/**/*.config
+          **/bin/${{ matrix.configuration }}/**/*.pdb
         if-no-files-found: warn
