@@ -17,30 +17,65 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
     
-    - name: List files (для диагностики)
-      run: dir /s /b
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
     
-    - name: Find .sln files
-      run: dir *.sln /s /b
+    - name: List all files in repository
+      run: Get-ChildItem -Path . -Recurse | Select-Object FullName
     
-    - name: Find .csproj files
-      run: dir *.csproj /s /b
-    
-    - name: Try to build
+    - name: Find all .sln files
       run: |
-        # Попробуем найти первый .sln файл и собрать его
+        $slnFiles = Get-ChildItem -Filter *.sln -Recurse
+        if ($slnFiles.Count -gt 0) {
+          Write-Host "Found solution files:"
+          $slnFiles | ForEach-Object { Write-Host $_.FullName }
+        } else {
+          Write-Host "No .sln files found"
+        }
+    
+    - name: Find all .csproj files
+      run: |
+        $csprojFiles = Get-ChildItem -Filter *.csproj -Recurse
+        if ($csprojFiles.Count -gt 0) {
+          Write-Host "Found project files:"
+          $csprojFiles | ForEach-Object { Write-Host $_.FullName }
+        } else {
+          Write-Host "No .csproj files found"
+        }
+    
+    - name: Find packages.config files
+      run: |
+        $packagesConfig = Get-ChildItem -Filter packages.config -Recurse
+        if ($packagesConfig.Count -gt 0) {
+          Write-Host "Found packages.config files:"
+          $packagesConfig | ForEach-Object { Write-Host $_.FullName }
+        } else {
+          Write-Host "No packages.config files found"
+        }
+    
+    - name: Try to restore NuGet packages
+      run: |
         $slnFile = Get-ChildItem -Filter *.sln -Recurse | Select-Object -First 1
         if ($slnFile) {
-          Write-Host "Building $($slnFile.FullName)"
-          msbuild $slnFile.FullName /p:Configuration=Debug /p:Platform="Any CPU"
+          Write-Host "Restoring packages for solution: $($slnFile.FullName)"
+          nuget restore $slnFile.FullName
         } else {
-          Write-Host "No .sln file found, looking for .csproj"
-          $csprojFile = Get-ChildItem -Filter *.csproj -Recurse | Select-Object -First 1
-          if ($csprojFile) {
-            Write-Host "Building $($csprojFile.FullName)"
-            msbuild $csprojFile.FullName /p:Configuration=Debug /p:Platform="Any CPU"
+          $packagesConfig = Get-ChildItem -Filter packages.config -Recurse | Select-Object -First 1
+          if ($packagesConfig) {
+            Write-Host "Restoring packages from: $($packagesConfig.FullName)"
+            nuget restore $packagesConfig.FullName -PackagesDirectory .\packages
           } else {
-            Write-Error "No solution or project file found"
-            exit 1
+            Write-Host "No packages.config found, skipping restore"
           }
+        }
+    
+    - name: Build the first found project
+      run: |
+        $csprojFile = Get-ChildItem -Filter *.csproj -Recurse | Select-Object -First 1
+        if ($csprojFile) {
+          Write-Host "Building project: $($csprojFile.FullName)"
+          msbuild $csprojFile.FullName /p:Configuration=Release /p:Platform="Any CPU" /p:TargetFrameworkVersion=v4.5
+        } else {
+          Write-Error "No .csproj files found to build"
+          exit 1
         }
