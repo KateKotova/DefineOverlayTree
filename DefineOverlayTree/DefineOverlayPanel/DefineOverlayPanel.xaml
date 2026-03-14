@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="DefineOverlayTree.DefineOverlayPanel.DefineOverlayPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:graphicalOverlayView="clr-namespace:DefineOverlayTree.DefineOverlayPanel.GraphicalOverlayView"
+             xmlns:defineOverlayPanel="clr-namespace:DefineOverlayTree.DefineOverlayPanel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance defineOverlayPanel:DefineOverlayPanelViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/Brushes.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TextBoxStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,25" DataContext="{Binding GraphicalOverlay}">
+            <TextBox
+                Height="28" Width="190" Padding="8,0,8,0"
+                TextAlignment="Left"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                IsTabStop ="False" Focusable="False"
+                Text="{Binding NewLayerName, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TextBox">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <TextBlock
+                                            Text="{Binding NewLayerDefaultName}"
+                                            Style="{StaticResource WaterMarkInnerTextBlockStyle}"/>
+                                        <TextBox
+                                            x:Name="textbox"
+                                            Background="Transparent"
+                                            Height="{TemplateBinding Height}"
+                                            Width="{TemplateBinding Width}"
+                                            MaxLength="30"
+                                            Style="{StaticResource TextBoxStyle}"
+                                            Padding="{TemplateBinding Padding}"
+                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TextBox.Style>
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding AddLayer}" Key="Return" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button VerticalContentAlignment="Center" Content="Add layer"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Margin="5,0,0,0"
+                    Height="28" Width="75"
+                    Command="{Binding AddLayer}"/>
+        </StackPanel>
+        <graphicalOverlayView:GraphicalOverlayView Grid.Row="1" DataContext="{Binding GraphicalOverlay}"/>
+    </Grid>
+</UserControl>
+

@@ -1,0 +1,100 @@
+﻿<Window x:Class="DefineOverlayTree.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DefineOverlayTree"
+        xmlns:defineOverlayPanel="clr-namespace:DefineOverlayTree.DefineOverlayPanel"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+        Width="950" Height="600"
+        MinWidth="400" MinHeight="300"
+        Title="{x:Static local:MainWindowViewModel.ApplicationTitle}"
+        Icon="Resources/Application.ico"
+        Closing="MainWindow_OnClosing">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/GlobalStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TextBlockStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <defineOverlayPanel:DefineOverlayPanel Margin="10" DataContext="{Binding DefineOverlayPanel}"/>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" IsTabStop="False">
+            <TextBlock Margin="10"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Top"
+                       Style="{StaticResource BlackTextBlockStyle}">
+                <Run Text="Create a layer." FontWeight="Bold"/>
+                Type a new layer name or leave the default name. Press the Add layer button.
+                The index in the default name will be incremented automatically.
+                There could be from 0 to 10 layers.
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Edit a layer name." FontWeight="Bold"/>
+                Select a layer name in the first column and edit it. The new name will be corrected automatically to be unique.
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Delete a layer." FontWeight="Bold"/>
+                Press the cross button at the right of the deleting layer. The first layer at the bottom couldn't be deleted.
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Overlays." FontWeight="Bold"/>
+                An overlay has a shifted layer (the upper layer), a referenced layer (the lower layer) and a direction (X or Y).
+                There could be from 0 to 4 overlays (OV1, OV2, OV3, OV4).
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Create an overlay." FontWeight="Bold"/>
+                There are cells in the 4 right columns. Hover a random cell. A
+                <Run Text="blue" FontWeight="Bold" Foreground="{StaticResource BlueDarkBrush}" />
+                circle will appear in the column of the adding overlay and at the same row as the hovered cell.
+                Click in a random cell. A blinking
+                <Run Text="orange" FontWeight="Bold" Foreground="{StaticResource Signal2RegularBrush}" />
+                circle will appear in the column of the adding overlay and at the same row as the clicked cell.
+                This means that the overlay isn't finished and either a shifted or a referenced layer was selected.
+                Click in a random cell of another row. A
+                <Run Text="blue" FontWeight="Bold" Foreground="{StaticResource BlueRegularBrush}" />
+                circle will appear in the column of the added overlay and at the same row as the clicked cell.
+                Both of the circles are
+                <Run Text="blue" FontWeight="Bold" Foreground="{StaticResource BlueRegularBrush}" />
+                . An arrow appeared from the shifted layer to the referenced layer. The direction appeared under the added overlay.
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Edit an overlay." FontWeight="Bold"/>
+                Hover one of the circles of an existing overlay. It will be
+                <Run Text="orange" FontWeight="Bold" Foreground="{StaticResource Signal2RegularBrush}" />
+                . Click on it. The circle and the arrow will disappear.
+                Another circle will become blinking
+                <Run Text="orange" FontWeight="Bold" Foreground="{StaticResource Signal2RegularBrush}" />
+                that means that the overlay is now unfinished. Click in a random cell in another row to make the overlay completed.
+                Or click on the remained
+                <Run Text="orange" FontWeight="Bold" Foreground="{StaticResource Signal2RegularBrush}" />
+                circle to delete the overlay.
+                Deletion layers could lead to deletion the overlays' circles placed on the deleting layers.
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Unavailable overlays." FontWeight="Bold"/>
+                There is a stub mechanism to detect available and unavailable overlays.
+                If some layer for some overlay is unavailable it marks by
+                <Run Text="red" FontWeight="Bold" Foreground="{StaticResource Signal1RegularBrush}" />
+                .
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Exceptions." FontWeight="Bold"/>
+                Sometimes there could appear exceptions related with the logic layer stubs.
+            </TextBlock>
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="DefineOverlayTree.DefineOverlayPanel.GraphicalOverlayView.GraphicalOverlayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:graphicalOverlayView="clr-namespace:DefineOverlayTree.DefineOverlayPanel.GraphicalOverlayView"
+             xmlns:helperClasses="clr-namespace:DefineOverlayTree.HelperClasses"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance graphicalOverlayView:GraphicalOverlayViewModel}"
+             d:DesignHeight="400" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Icons/PathIcons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/Brushes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TextBlockStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TextBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayPanel/GraphicalOverlayView/OverlayWithCirclesStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,3" Orientation="Horizontal">
+            <Canvas Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.LayerNameWidth}}" />
+            <ItemsControl ItemsSource="{Binding OverlayNames}" IsTabStop="False">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource GrayRegularTextBlockStyle}"
+                                   Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.OverlayColumnWidth}}"
+                                   Text="{Binding DefaultName}"
+                                   ToolTip="{Binding Name}" ToolTipService.ShowOnDisabled="True"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Layers.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" IsTabStop="False">
+            <Grid>
+                <ItemsControl Grid.Column="0" ItemsSource="{Binding ReversedLayers}" IsTabStop="False" Margin="0,0,8,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <graphicalOverlayView:LayerView Margin="0,1,0,2" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.LayerNameWidth}}"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Overlays}" IsTabStop="False">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--<graphicalOverlayView:OverlayWithCirclesView />-->
+
+                                <Canvas Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.OverlayColumnWidth}}">
+                                    <Ellipse Canvas.Top="{Binding Circle0Y}"
+                                             Style="{StaticResource CircleStyle}"
+                                             Visibility="{Binding Circle0IsVisible,
+                                             Converter={StaticResource BooleanToVisibilityConverter}}"
+                                             helperClasses:MouseDownBehavior.MouseDownCommand="{Binding Layer0CircleMouseDownCommand,
+                                             Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    </Ellipse>
+
+                                    <Ellipse Canvas.Top="{Binding Circle1Y}"
+                                             Style="{StaticResource CircleStyle}"
+                                             Visibility="{Binding Circle1IsVisible,
+                                             Converter={StaticResource BooleanToVisibilityConverter}}"
+                                             helperClasses:MouseDownBehavior.MouseDownCommand="{Binding Layer1CircleMouseDownCommand,
+                                             Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    </Ellipse>
+
+                                    <Path Style="{StaticResource ArrowStyle}"/>
+                                    <Line Style="{StaticResource LineStyle}"/>
+                                </Canvas>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Opacity" Value="0.4" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Margin="0,0,0,10" Orientation="Horizontal" VerticalAlignment="Top">
+            <TextBlock Margin="0,3,0,0"
+                Style="{StaticResource BlackTextBlockStyle}" FontStyle="Italic"
+                Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.LayerNameWidth}}"
+                Text="{Binding MaximumLayersCountMessage}"/>
+            <ItemsControl ItemsSource="{Binding Overlays}" IsTabStop="False">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.OverlayColumnWidth}}">
+                            <TextBlock HorizontalAlignment="Center"
+                                       Text="{Binding Direction.Value}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource BlackTextBlockStyle}">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Foreground" Value="{StaticResource GrayRegularColorBrush}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

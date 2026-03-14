@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7958DE63-EC38-469F-92C5-0B7359777C0E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DefineOverlayTree</RootNamespace>
+    <AssemblyName>DefineOverlayTree</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="DefineOverlayPanel\DefineOverlayPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DefineOverlayPanel\GraphicalOverlayView\GraphicalOverlayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DefineOverlayPanel\GraphicalOverlayView\LayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DefineOverlayPanel\GraphicalOverlayView\OverlayWithCirclesStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DefineOverlayPanel\GraphicalOverlayView\OverlayWithCirclesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Icons\PathIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\InvertBooleanConverter.cs" />
+    <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\TrimmedContentToVisibilityConverter.cs" />
+    <Compile Include="DefineOverlayPanel\DefaultNameBuilder.cs" />
+    <Compile Include="DefineOverlayPanel\DefineOverlayPanel.xaml.cs">
+      <DependentUpon>DefineOverlayPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DefineOverlayPanel\DefineOverlayPanelViewModel.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\Cell.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\GraphicalOverlaySizes.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\GraphicalOverlayView.xaml.cs">
+      <DependentUpon>GraphicalOverlayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\GraphicalOverlayViewModel.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\LayerEventArgs.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\LayerView.xaml.cs">
+      <DependentUpon>LayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\LayerViewModel.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\OverlayName.cs" />
+    <Compile Include="DefineOverlayPanel\GraphicalOverlayView\OverlayWithCirclesViewModel.cs" />
+    <Compile Include="DefineOverlayPanel\NamingService.cs" />
+    <Compile Include="DefineOverlayPanel\Overlay.cs" />
+    <Compile Include="DefineOverlayPanel\OverlayService.cs" />
+    <Compile Include="HelperClasses\DelegateCommand.cs" />
+    <Compile Include="HelperClasses\EnumWrapper.cs" />
+    <Compile Include="HelperClasses\INotifyItemPropertyChangedEx.cs" />
+    <Compile Include="HelperClasses\IPropertyChangedEventExArgs.cs" />
+    <Compile Include="HelperClasses\MouseDownBehavior.cs" />
+    <Compile Include="HelperClasses\ObservableCollectionEx.cs" />
+    <Compile Include="HelperClasses\PropertyChangedEventExArgs.cs" />
+    <Compile Include="LogicStubs\LayerStub.cs" />
+    <Compile Include="LogicStubs\OverlayCandidatesServiceStub.cs" />
+    <Compile Include="LogicStubs\OverlayDefinitionStub.cs" />
+    <Compile Include="LogicStubs\OverlayMapStub.cs" />
+    <Compile Include="LogicStubs\OverlayStub.cs" />
+    <Compile Include="LogicStubs\StackStub.cs" />
+    <Compile Include="LogicStubs\ToolStub.cs" />
+    <Compile Include="Logic\Direction.cs" />
+    <Compile Include="Logic\ILayer.cs" />
+    <Compile Include="Logic\IOverlay.cs" />
+    <Compile Include="Logic\IOverlayCandidatesService.cs" />
+    <Compile Include="Logic\IOverlayDefinition.cs" />
+    <Compile Include="Logic\IOverlayMap.cs" />
+    <Compile Include="Logic\IStack.cs" />
+    <Compile Include="Logic\ITool.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Styles\Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\GlobalStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\TextBlockStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\TextBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\TooltipStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="HelperClasses\NotifyPropertyChanged.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Resource Include="Fonts\Roboto-Light.ttf" />
+    <Resource Include="Fonts\Roboto-Medium.ttf" />
+    <Resource Include="Fonts\Roboto-Regular.ttf" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Application.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

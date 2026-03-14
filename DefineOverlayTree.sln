@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefineOverlayTree", "DefineOverlayTree\DefineOverlayTree.csproj", "{7958DE63-EC38-469F-92C5-0B7359777C0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefineOverlayTree.UnitTests", "DefineOverlayTree.UnitTests\DefineOverlayTree.UnitTests.csproj", "{46B9E2CC-200B-4388-91C0-CD39A42C3A0D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7958DE63-EC38-469F-92C5-0B7359777C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7958DE63-EC38-469F-92C5-0B7359777C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7958DE63-EC38-469F-92C5-0B7359777C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7958DE63-EC38-469F-92C5-0B7359777C0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B9E2CC-200B-4388-91C0-CD39A42C3A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B9E2CC-200B-4388-91C0-CD39A42C3A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B9E2CC-200B-4388-91C0-CD39A42C3A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B9E2CC-200B-4388-91C0-CD39A42C3A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE08E9CD-CB28-4690-8B46-6941791B00C5}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="WhiteColor">#FFFFFFFF</Color>
+    <Color x:Key="BlackColor">#FF000000</Color>
+
+    <Color x:Key="GrayDarkColor">#FF666666</Color>
+    <Color x:Key="GrayRegularColor">#FFAAAAAA</Color>
+    <Color x:Key="GrayLightColor">#FFE2E2E2</Color>
+    <Color x:Key="GraySuperLightColor">#FFF8F8F8</Color>
+
+    <Color x:Key="BlueRegularColor">#FF0AA8FB</Color>
+    <Color x:Key="BlueDarkColor">#FF1B3E93</Color>
+    <Color x:Key="Signal1RegularColor">#FFBE1E2D</Color>
+    <Color x:Key="Signal2RegularColor">#FFFF7F45</Color>
+
+    <SolidColorBrush x:Key="WhiteColorBrush" Color="{StaticResource WhiteColor}"/>
+    <SolidColorBrush x:Key="BlackColorBrush" Color="{StaticResource BlackColor}"/>
+    <SolidColorBrush x:Key="GrayDarkColorBrush" Color="{StaticResource GrayDarkColor}"/>
+    <SolidColorBrush x:Key="GrayRegularColorBrush" Color="{StaticResource GrayRegularColor}"/>
+    <SolidColorBrush x:Key="GrayLightColorBrush" Color="{StaticResource GrayLightColor}"/>
+    <SolidColorBrush x:Key="GraySuperLightColorBrush" Color="{StaticResource GraySuperLightColor}"/>
+ 
+    <SolidColorBrush x:Key="BlueRegularBrush" Color="{StaticResource BlueRegularColor}"/>
+    <SolidColorBrush x:Key="BlueDarkBrush" Color="{StaticResource BlueDarkColor}"/>
+    <SolidColorBrush x:Key="Signal1RegularBrush" Color="{StaticResource Signal1RegularColor}"/>
+    <SolidColorBrush x:Key="Signal2RegularBrush" Color="{StaticResource Signal2RegularColor}"/>
+    
+</ResourceDictionary>

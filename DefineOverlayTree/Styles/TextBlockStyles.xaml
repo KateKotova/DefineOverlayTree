@@ -1,0 +1,58 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Brushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="../Fonts/#Roboto"/>
+        <Setter Property="RenderOptions.ClearTypeHint" Value="Enabled"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Foreground" Value="{StaticResource GrayDarkColorBrush}"/>
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style x:Key="GrayRegularTextBlockStyle" BasedOn="{StaticResource TextBlockStyle}" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource GrayRegularColorBrush}"/>
+    </Style>
+
+    <Style x:Key="BlackTextBlockStyle" BasedOn="{StaticResource TextBlockStyle}" TargetType="TextBlock">
+        <Style.Setters>
+            <Setter Property="Foreground" Value="{StaticResource BlackColorBrush}"/>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="WaterMarkInnerTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
+        <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="VerticalAlignment" Value="{Binding VerticalContentAlignment,
+            RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="HorizontalAlignment" Value="{Binding HorizontalContentAlignment,
+            RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="Visibility" Value="Hidden" />
+        <Setter Property="Foreground" Value="{StaticResource GrayRegularColorBrush}" />
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=textbox}" Value="False" />
+                    <Condition Binding="{Binding Text, ElementName=textbox}" Value="" />
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Visibility" Value="Visible" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=textbox}" Value="False" />
+                    <Condition Binding="{Binding Text, ElementName=textbox}" Value="{x:Null}" />
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Visibility" Value="Visible" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

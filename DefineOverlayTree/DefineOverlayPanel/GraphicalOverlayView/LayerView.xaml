@@ -1,0 +1,182 @@
+﻿<UserControl x:Class="DefineOverlayTree.DefineOverlayPanel.GraphicalOverlayView.LayerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:DefineOverlayTree.Converters"
+             xmlns:graphicalOverlayView="clr-namespace:DefineOverlayTree.DefineOverlayPanel.GraphicalOverlayView"
+             xmlns:helperClasses="clr-namespace:DefineOverlayTree.HelperClasses"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance graphicalOverlayView:LayerViewModel}"
+             d:DesignHeight="100" d:DesignWidth="500">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Icons/PathIcons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/Brushes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TextBlockStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TextBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DefineOverlayTree;component/Styles/TooltipStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter"/>
+
+            <system:Double x:Key="ActiveCircleBlinkMaxOpacity">0.5</system:Double>
+
+            <SolidColorBrush x:Key="ActiveCircleBrush" Color="{StaticResource BlueRegularColor}"
+                             Opacity="{StaticResource ActiveCircleBlinkMaxOpacity}"/>
+            <SolidColorBrush x:Key="ActiveInvalidCircleBrush" Color="{StaticResource Signal1RegularColor}"
+                             Opacity="{StaticResource ActiveCircleBlinkMaxOpacity}"/>
+
+            <Style x:Key="ActiveCircleStyle" TargetType="Ellipse"
+                   d:DataContext="{d:DesignInstance graphicalOverlayView:Cell}">
+                <Setter Property="Canvas.Left" Value="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.CircleX}}" />
+                <Setter Property="Width" Value="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.CircleDiameter}}" />
+                <Setter Property="Height" Value="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.CircleDiameter}}" />
+                <Setter Property="Fill" Value="{StaticResource ActiveCircleBrush}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsValid}" Value="False">
+                        <Setter Property="Fill" Value="{StaticResource ActiveInvalidCircleBrush}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" BorderThickness="1"
+                Height="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.OuterLayerRowHeight}}"
+                Width="Auto" SnapsToDevicePixels="True">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Grid Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.LayerNameWidth}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0"
+                                 Padding="8,0" HorizontalAlignment="Stretch"
+                                 Height="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.InnerLayerRowHeight}}"
+                                 MaxLength="30"
+                                 Text="{Binding Name, Mode=TwoWay}"
+                                 ToolTipService.ShowOnDisabled="True">
+                            <TextBox.ToolTip>
+                                <ToolTip Style="{StaticResource TrimmedContentTooltipStyle}">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </ToolTip>
+                            </TextBox.ToolTip>
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource TextBlockLikeTextBoxStyleBase}">
+                                    <Setter Property="Foreground" Value="{StaticResource BlackColorBrush}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Foreground" Value="{StaticResource GrayRegularColorBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                        <TextBlock Grid.Column="1" Padding="0,0,8,0"
+                                   Visibility="{Binding IsFirst, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Style="{StaticResource GrayRegularTextBlockStyle}"
+                                   Text="Reference"
+                                   FontStyle="Italic"
+                                   FontSize="10" />
+                    </Grid>
+                </Grid>
+
+                <ItemsControl Grid.Column="1" ItemsSource="{Binding Cells}" IsTabStop="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.OverlayColumnWidth}}"
+                                  Background="Transparent"
+                                  helperClasses:MouseDownBehavior.MouseDownCommand="{Binding ClickedCommand,
+                                  Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <Canvas Width="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.OverlayColumnWidth}}">
+                                    <Ellipse x:Name="activeCircle"
+                                             Canvas.Top="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.CircleYRelativeToCell}}"
+                                             Canvas.Left="{Binding Source={x:Static graphicalOverlayView:GraphicalOverlaySizes.CircleX}}"
+                                             Style="{StaticResource ActiveCircleStyle}"
+                                             Visibility="Collapsed">
+                                    </Ellipse>
+                                </Canvas>
+
+                                <Line X1="0" Y1="0" X2="0" Y2="1" HorizontalAlignment="Left"
+                                      StrokeDashArray="1 2" Stretch="Fill"
+                                      StrokeThickness="1" StrokeStartLineCap="Square" StrokeEndLineCap="Square">
+                                    <Line.Style>
+                                        <Style TargetType="Line">
+                                            <Setter Property="Stroke" Value="{StaticResource GrayLightColorBrush}"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Stroke" Value="{StaticResource GrayRegularColorBrush}"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Line.Style>
+                                </Line>
+
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction Command="{Binding ClickedCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsMouseOver,
+                                                   RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                             Value="True">
+                                    <Setter TargetName="activeCircle" Property="Visibility"
+                                            Value="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{StaticResource GrayLightColorBrush}"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" Value="{StaticResource GrayLightColorBrush}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource GrayRegularColorBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+
+        <Button Grid.Column="1" Margin="4,0,0,0"
+                Command="{Binding DeleteCommand}"
+                Style="{StaticResource DeleteButtonStyle}"
+                Visibility="{Binding IsFirst, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
+                IsEnabled="{Binding CanRemoveLayer}" />
+    </Grid>
+</UserControl>

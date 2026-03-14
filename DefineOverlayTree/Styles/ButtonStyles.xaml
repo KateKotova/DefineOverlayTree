@@ -1,0 +1,116 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Brushes.xaml" />
+        <ResourceDictionary Source="GlobalStyles.xaml" />
+        <ResourceDictionary Source="../Icons/PathIcons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="PathButtonTemplate" TargetType="{x:Type Button}">
+        <Border Background="{TemplateBinding Background}"
+                SnapsToDevicePixels="True"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Margin="{TemplateBinding Padding}" >
+                <ContentPresenter.Content>
+                    <Path Fill="{TemplateBinding Foreground}" Stretch="Uniform"
+                          Data="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}"/>
+                </ContentPresenter.Content>
+            </ContentPresenter>
+        </Border>
+    </ControlTemplate>
+
+    <Style x:Key="DeleteButtonStyleFocusVisualStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="-2,-2,-2,-3" Style="{StaticResource FocusRectangleStyle}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DeleteButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template" Value="{StaticResource PathButtonTemplate}"/>
+        <Setter Property="Content" Value="{StaticResource DeleteIconString}"/>
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource DeleteButtonStyleFocusVisualStyle}" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource GrayRegularColorBrush}" />
+        <Style.Triggers>
+            <Trigger Property="Button.IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource Signal1RegularBrush}" />
+            </Trigger>
+            <Trigger Property="Button.IsPressed" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource Signal1RegularBrush}" />
+            </Trigger>
+            <Trigger Property="Button.IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource GrayLightColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type ButtonBase}">
+        <Border SnapsToDevicePixels="True" BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Margin="{TemplateBinding Padding}" />
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="BorderButtonTemplate" TargetType="{x:Type ButtonBase}">
+        <Border Background="{DynamicResource BorderButtonBackgroundBrush}"
+                SnapsToDevicePixels="True"
+                BorderThickness="1"
+                BorderBrush="{TemplateBinding Background}">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Margin="{TemplateBinding Padding}" />
+        </Border>
+    </ControlTemplate>
+
+    <Style x:Key="ButtonStyle" TargetType="{x:Type ButtonBase}" >
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="6,0" />
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template" Value="{StaticResource ButtonTemplate}"/>
+        <Setter Property="Background" Value="{StaticResource BlueRegularBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource BlueRegularBrush}" />
+        <Style.Triggers>
+            <Trigger Property="Button.IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource BlueDarkBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource BlueDarkBrush}" />
+            </Trigger>
+            <Trigger Property="Button.IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Signal2RegularBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource Signal2RegularBrush}" />
+            </Trigger>
+            <Trigger Property="Button.IsEnabled" Value="False">
+                <Setter Property="Background" Value="{StaticResource GraySuperLightColorBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource GrayRegularColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SecondaryButtonStyle" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource ButtonStyle}">
+        <Setter Property="Template" Value="{StaticResource BorderButtonTemplate}" />
+        <Style.Resources>
+            <SolidColorBrush x:Key="ButtonTextBrush" Color="{StaticResource BlueRegularColor}" />
+            <SolidColorBrush x:Key="ButtonMouseHoverTextBrush" Color="{StaticResource BlueDarkColor}" />
+            <SolidColorBrush x:Key="ButtonMouseDownTextBrush" Color="{StaticResource Signal2RegularColor}" />
+        </Style.Resources>
+        <Style.Triggers>
+            <Trigger Property="Button.IsEnabled" Value="False">
+                <Setter Property="Template" Value="{StaticResource ButtonTemplate}" />
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GrayLightColorBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:DefineOverlayTree.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Brushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:TrimmedContentToVisibilityConverter x:Key="TrimmedToVisibilityConverter"/>
+
+    <Style x:Key="TooltipStyle" TargetType="ToolTip">
+        <Setter Property="Background" Value="{StaticResource BlackColorBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BlackColorBrush}"/>
+        <Setter Property="FontFamily" Value="/DefineOverlayTree;component/Fonts/#Roboto"/>
+    </Style>
+
+    <Style x:Key="TrimmedContentTooltipStyle" TargetType="ToolTip" BasedOn="{StaticResource TooltipStyle}">
+        <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget,
+            Converter={StaticResource TrimmedToVisibilityConverter}}"/>
+    </Style>
+
+</ResourceDictionary>
