@@ -20,21 +20,53 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
     
-    # Альтернативный способ установки .NET Framework
-    - name: Setup .NET Framework 4.6.1
+    # Установка .NET Framework 4.6.1 Developer Pack
+    - name: Install .NET Framework 4.6.1
+      shell: powershell
       run: |
-        # Используем chocolatey для установки
-        choco install netfx-4.6.1-devpack -y
+        # URL из официального источника Microsoft
+        $url = "https://go.microsoft.com/fwlink/?linkid=2088631"
+        $output = "NDP461-DevPack.exe"
+        
+        Write-Host "Downloading .NET Framework 4.6.1 Developer Pack from Microsoft..."
+        Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
+        
+        Write-Host "Installing .NET Framework 4.6.1 Developer Pack..."
+        $process = Start-Process -FilePath $output -ArgumentList "/quiet", "/norestart" -Wait -PassThru
+        
+        if ($process.ExitCode -eq 0 -or $process.ExitCode -eq 3010) {
+          Write-Host "✓ Installation completed successfully. Exit code: $($process.ExitCode)"
+        } else {
+          Write-Host "✗ Installation failed with exit code: $($process.ExitCode)"
+          exit $process.ExitCode
+        }
+        
+        # Проверка установки
+        $refPath = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1"
+        if (Test-Path $refPath) {
+          Write-Host "✓ Reference assemblies found at: $refPath"
+        } else {
+          Write-Host "⚠ Warning: Reference assemblies not found at expected path"
+        }
     
+    # Восстановление NuGet пакетов
     - name: Restore NuGet packages
       run: nuget restore "DefineOverlayTree.sln"
     
+    # Сборка решения
     - name: Build solution
-      run: msbuild "DefineOverlayTree.sln" /p:Configuration=Release /p:Platform="Any CPU"
+      run: |
+        msbuild "DefineOverlayTree.sln" /p:Configuration=Release /p:Platform="Any CPU"
     
+    # Загрузка артефактов
     - name: Upload artifacts
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: WPF-App-Release
         path: |
-          **/bin/Release/**/*
+          **/bin/Release/**/*.exe
+          **/bin/Release/**/*.dll
+          **/bin/Release/**/*.config
+          **/bin/Release/**/*.pdb
+        if-no-files-found: warn
