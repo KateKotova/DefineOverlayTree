@@ -20,37 +20,21 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
     
-    # Устанавливаем .NET Framework 4.6.1 Developer Pack
+    # Альтернативный способ установки .NET Framework
     - name: Setup .NET Framework 4.6.1
       run: |
-        $url = "https://download.microsoft.com/download/E/F/D/EFD7B5F3-C79E-42E1-B78C-7B31904D189A/NDP461-DevPack-KB3105179-ENU.exe"
-        $output = "NDP461-DevPack.exe"
-        
-        Write-Host "Downloading .NET Framework 4.6.1 Developer Pack..."
-        Invoke-WebRequest -Uri $url -OutFile $output
-        
-        Write-Host "Installing .NET Framework 4.6.1 Developer Pack..."
-        Start-Process -FilePath $output -ArgumentList "/quiet", "/norestart" -Wait
-        
-        Write-Host "Installation completed"
+        # Используем chocolatey для установки
+        choco install netfx-4.6.1-devpack -y
     
-    # Восстанавливаем NuGet пакеты
     - name: Restore NuGet packages
-      run: |
-        nuget restore "DefineOverlayTree.sln"
+      run: nuget restore "DefineOverlayTree.sln"
     
-    # Собираем решение
     - name: Build solution
-      run: |
-        msbuild "DefineOverlayTree.sln" /p:Configuration=Release /p:Platform="Any CPU" /p:TargetFrameworkVersion=v4.6.1
+      run: msbuild "DefineOverlayTree.sln" /p:Configuration=Release /p:Platform="Any CPU"
     
-    # Загружаем артефакты сборки
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: WPF-App-Release
         path: |
-          **/bin/Release/**/*.exe
-          **/bin/Release/**/*.dll
-          **/bin/Release/**/*.config
-        if-no-files-found: warn
+          **/bin/Release/**/*
