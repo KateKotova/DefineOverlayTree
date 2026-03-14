@@ -1,4 +1,4 @@
-name: Debug Build
+name: Build WPF App
 
 on:
   push:
@@ -20,62 +20,32 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
     
-    - name: List all files in repository
-      run: Get-ChildItem -Path . -Recurse | Select-Object FullName
-    
-    - name: Find all .sln files
-      run: |
-        $slnFiles = Get-ChildItem -Filter *.sln -Recurse
-        if ($slnFiles.Count -gt 0) {
-          Write-Host "Found solution files:"
-          $slnFiles | ForEach-Object { Write-Host $_.FullName }
-        } else {
-          Write-Host "No .sln files found"
-        }
-    
-    - name: Find all .csproj files
-      run: |
-        $csprojFiles = Get-ChildItem -Filter *.csproj -Recurse
-        if ($csprojFiles.Count -gt 0) {
-          Write-Host "Found project files:"
-          $csprojFiles | ForEach-Object { Write-Host $_.FullName }
-        } else {
-          Write-Host "No .csproj files found"
-        }
-    
-    - name: Find packages.config files
-      run: |
-        $packagesConfig = Get-ChildItem -Filter packages.config -Recurse
-        if ($packagesConfig.Count -gt 0) {
-          Write-Host "Found packages.config files:"
-          $packagesConfig | ForEach-Object { Write-Host $_.FullName }
-        } else {
-          Write-Host "No packages.config files found"
-        }
-    
-    - name: Try to restore NuGet packages
+    - name: Find solution file
       run: |
         $slnFile = Get-ChildItem -Filter *.sln -Recurse | Select-Object -First 1
         if ($slnFile) {
-          Write-Host "Restoring packages for solution: $($slnFile.FullName)"
-          nuget restore $slnFile.FullName
+          Write-Host "Found solution: $($slnFile.FullName)"
+          echo "SOLUTION_FILE=$($slnFile.FullName)" >> $env:GITHUB_ENV
         } else {
-          $packagesConfig = Get-ChildItem -Filter packages.config -Recurse | Select-Object -First 1
-          if ($packagesConfig) {
-            Write-Host "Restoring packages from: $($packagesConfig.FullName)"
-            nuget restore $packagesConfig.FullName -PackagesDirectory .\packages
-          } else {
-            Write-Host "No packages.config found, skipping restore"
+          Write-Host "No solution file found"
+        }
+    
+    - name: Restore NuGet packages
+      run: |
+        if (Test-Path env:SOLUTION_FILE) {
+          nuget restore $env:SOLUTION_FILE
+        } else {
+          Get-ChildItem -Filter packages.config -Recurse | ForEach-Object {
+            nuget restore $_.FullName -PackagesDirectory packages
           }
         }
     
-    - name: Build the first found project
+    - name: Build with solution
+      if: env.SOLUTION_FILE != ''
+      run: msbuild $env:SOLUTION_FILE /p:Configuration=Release /p:Platform="Any CPU"
+    
+    - name: Build without solution (fallback)
+      if: env.SOLUTION_FILE == ''
       run: |
-        $csprojFile = Get-ChildItem -Filter *.csproj -Recurse | Select-Object -First 1
-        if ($csprojFile) {
-          Write-Host "Building project: $($csprojFile.FullName)"
-          msbuild $csprojFile.FullName /p:Configuration=Release /p:Platform="Any CPU" /p:TargetFrameworkVersion=v4.5
-        } else {
-          Write-Error "No .csproj files found to build"
-          exit 1
-        }
+        $csprojFile = "DefineOverlayTree\DefineOverlayTree.csproj"
+        msbuild $csprojFile /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=bin\Release\
